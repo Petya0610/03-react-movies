@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import css from './App.module.css'
 import type { Movie } from '../../types/movie';
-import { fetchMovie } from '../../services/movieService';
+import { fetchMovies } from '../../services/movieService';
 import toast, { Toaster } from 'react-hot-toast';
 import SearchBar from '../SearchBar/SearchBar';
 import Loader from '../Loader/Loader';
@@ -21,7 +21,7 @@ export default function App() {
     setMovies([]);
 
     try {
-      const results = await fetchMovie(query)
+      const results = await fetchMovies(query)
       if (results.length === 0) {
         toast("No movies found for your request.")
       }
