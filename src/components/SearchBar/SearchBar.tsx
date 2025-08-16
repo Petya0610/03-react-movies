@@ -11,7 +11,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
 const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (formData: FormData) => {
-    const query = formData.get("query") as string;
+    const query = (formData.get("query") as string).trim();
     if (query === "") {
       toast.error("Please enter your search query")
       return;
