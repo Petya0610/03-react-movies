@@ -8,8 +8,8 @@ import Loader from '../Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import MovieModal from '../MovieModal/MovieModal';
-import { useQuery } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +19,7 @@ export default function App() {
     queryKey: ["movies", searchQuery, currentPage],
     queryFn: () => fetchMovies(searchQuery, currentPage),
     enabled: !!searchQuery,
+    placeholderData: keepPreviousData,
     
   });
   const movies = data?.results ?? [];
@@ -33,7 +34,11 @@ export default function App() {
   const handleSelectMovie = (movie: Movie) => setSelectedMovie(movie);
   const handleCloseModal = () => setSelectedMovie(null);
 
-  useEffect(() => setSelectedMovie(null), [currentPage]);
+  useEffect(() => {
+    if (!isLoading && !isFetching && searchQuery && totalPages === 0) {
+      toast("No movies found for your request.");
+    }
+  }, [isLoading, isFetching, searchQuery, totalPages]);
 
    
   return (
@@ -63,8 +68,6 @@ export default function App() {
       {selectedMovie && (
         <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
       )}
-      
-      
     </div>
   );
 }
