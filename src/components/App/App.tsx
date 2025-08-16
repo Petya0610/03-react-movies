@@ -26,6 +26,9 @@ export default function App() {
   const totalPages = data?.total_pages ?? 0;
 
   const handleSearch = async (newQuery: string) => {
+     if (movies.length === 0) {
+        toast("No movies found for your request.")
+      }
     setCurrentPage(1);
     setSearchQuery(newQuery);
     setSelectedMovie(null);
@@ -33,12 +36,6 @@ export default function App() {
 
   const handleSelectMovie = (movie: Movie) => setSelectedMovie(movie);
   const handleCloseModal = () => setSelectedMovie(null);
-
-  useEffect(() => {
-    if (!isLoading && !isFetching && searchQuery && totalPages === 0) {
-      toast("No movies found for your request.");
-    }
-  }, [isLoading, isFetching, searchQuery, totalPages]);
 
    
   return (
